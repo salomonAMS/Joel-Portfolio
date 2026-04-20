@@ -1,7 +1,4 @@
-﻿{
-  "version": 2,
-  "name": "jocam-portfolio",
-  "builds": [
-    { "src": "index.html", "use": "@vercel/static" }
-  ]
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next"
 }
