@@ -1,7 +1,23 @@
-﻿{
-  "version": 2,
-  "name": "jocam-portfolio",
-  "builds": [
-    { "src": "index.html", "use": "@vercel/static" }
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        }
+      ]
+    }
   ]
 }
