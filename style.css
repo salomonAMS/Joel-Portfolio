@@ -146,7 +146,7 @@ nav.scrolled{padding:14px 40px;background:rgba(20,20,20,0.8);backdrop-filter:blu
 .iphone-sticky{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center}
 .iphone-ambient{position:absolute;inset:0;pointer-events:none;transition:background 1s}
 /* side text panels */
-.ip-side{position:absolute;max-width:260px;opacity:0;transition:opacity .5s,transform .5s;pointer-events:none}
+.ip-side{position:absolute;max-width:280px;opacity:0;transition:opacity .6s cubic-bezier(.25,.46,.45,.94),transform .6s cubic-bezier(.25,.46,.45,.94);pointer-events:none}
 .ip-side.vis{opacity:1}
 .ip-side-l{left:clamp(16px,5vw,80px);top:50%;transform:translateY(-50%) translateX(-20px)}
 .ip-side-l.vis{transform:translateY(-50%) translateX(0)}

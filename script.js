@@ -116,12 +116,34 @@ function setDot(i){
 }
 
 const LABELS=["Système caméra","Téléphone complet","Rotation…","Écran activé","Mode paysage — Monteur","Retour vertical","Studio mobile"];
+const PHASE_TEXTS = [
+  // P0 - 0 (no text)
+  { lEye:"", lTitle:"", lText:"", rEye:"", rTitle:"", rText:"" },
+  // P1 - 1
+  { lEye:"Post-production", lTitle:"Précision<br>au pixel.", lText:"Chaque coupe est pensée pour servir le récit. La technique au service de l'émotion.", rEye:"Studio mobile", rTitle:"Livraison<br>mondiale.", rText:"Un workflow optimisé qui permet de livrer des résultats professionnels partout." },
+  // P2 - 2
+  { lEye:"Technologie", lTitle:"L'Outil<br>Parfait.", lText:"Découvrez l'envers du décor. Un design minimaliste pour une performance maximale.", rEye:"Design", rTitle:"Lignes<br>Épurées.", rText:"Une prise en main pensée pour la création sans limite." },
+  // P3 - 3
+  { lEye:"Action", lTitle:"Moteur.<br>Ça tourne.", lText:"Des couleurs éclatantes et une fluidité hors norme au bout de vos doigts.", rEye:"Interface", rTitle:"Focus<br>Absolu.", rText:"Plus rien entre vous et votre création." },
+  // P4 - 4 (wow effect horizontal)
+  { lEye:"EXPÉRIENCE", lTitle:"<span style='color:var(--red);font-style:italic;'>W</span>O<span style='color:var(--red);font-style:italic;'>W</span>", lText:"Passez à la dimension supérieure. L'immersion totale commence ici.", rEye:"CINÉMA", rTitle:"Vision<br>Panoramique.", rText:"Élargissez vos horizons créatifs d'un simple geste." },
+  // P5 - 5
+  { lEye:"Transition", lTitle:"Retour à<br>l'essentiel.", lText:"Une fluidité de mouvement qui accompagne chaque étape.", rEye:"Contrôle", rTitle:"Maîtrise<br>Totale.", rText:"Ajustez, cadrez, sublimez en un clin d'œil." },
+  // P6 - 6
+  { lEye:"360°", lTitle:"Vision<br>Globale.", lText:"Le summum de la créativité, sous tous les angles.", rEye:"Finalisation", rTitle:"Prêt pour<br>le monde.", rText:"Votre vision, prête à être partagée avec éclat." }
+];
 
 let lastPhase=-1;
 function setPhase(ph){
   if(ph===lastPhase)return; lastPhase=ph;
   ipLabel.textContent=LABELS[ph]||"";
   setDot(Math.min(ph,4));
+  
+  const ctx = PHASE_TEXTS[ph];
+  if (ctx) {
+    ipLeft.innerHTML = ctx.lTitle ? `<div class="ip-eyebrow">${ctx.lEye}</div><div class="ip-title">${ctx.lTitle}</div><p class="ip-body">${ctx.lText}</p>` : "";
+    ipRight.innerHTML = ctx.rTitle ? `<div class="ip-eyebrow">${ctx.rEye}</div><div class="ip-title">${ctx.rTitle}</div><p class="ip-body">${ctx.rText}</p>` : "";
+  }
 }
 
 function onIPhoneScroll(){
@@ -150,7 +172,7 @@ function onIPhoneScroll(){
     rotX=-5;
     showBack=true;
     setPhase(0);
-    ipLeft.classList.remove("vis"); ipRight.classList.remove("vis");
+    // ipLeft/ipRight visibility managed globally now based on phase
     iphAmb.style.background="radial-gradient(ellipse at 50% 50%,rgba(180,150,100,.07) 0%,transparent 70%)";
 
   }else if(prog<0.30){
@@ -160,7 +182,6 @@ function onIPhoneScroll(){
     rotX=-5+p1*5;
     showBack=true;
     setPhase(1);
-    ipLeft.classList.remove("vis"); ipRight.classList.remove("vis");
     iphAmb.style.background="radial-gradient(ellipse at 50% 50%,rgba(201,168,76,.05) 0%,transparent 70%)";
 
   }else if(prog<0.48){
@@ -172,7 +193,6 @@ function onIPhoneScroll(){
     showBack=rotY>90;
     showScreen=rotY<20; // screen fades in near the end
     setPhase(2);
-    ipLeft.classList.remove("vis"); ipRight.classList.remove("vis");
     iphAmb.style.background="radial-gradient(ellipse at 50% 50%,rgba(201,168,76,.06) 0%,transparent 70%)";
 
   }else if(prog<0.55){
@@ -180,7 +200,6 @@ function onIPhoneScroll(){
     scale=1.0; rotY=0; rotX=0; rotZ=0;
     showBack=false; showScreen=true; showPortrait=true;
     setPhase(3);
-    ipLeft.classList.add("vis"); ipRight.classList.add("vis");
     iphAmb.style.background="radial-gradient(ellipse at 50% 50%,rgba(201,168,76,.08) 0%,transparent 70%)";
 
   }else if(prog<0.70){
@@ -193,7 +212,6 @@ function onIPhoneScroll(){
     // Drive landscape inner scroll to reveal monteur block
     landScrollX=-p4*60;
     setPhase(4);
-    ipLeft.classList.remove("vis"); ipRight.classList.remove("vis");
     iphAmb.style.background="radial-gradient(ellipse at 50% 50%,rgba(100,50,201,.05) 0%,transparent 70%)";
 
   }else if(prog<0.84){
@@ -205,7 +223,6 @@ function onIPhoneScroll(){
     showBack=false; showScreen=true; showLandscape=p5<0.5; showPortrait=p5>0.5;
     landScrollX=-60;
     setPhase(5);
-    ipLeft.classList.remove("vis"); ipRight.classList.remove("vis");
     iphAmb.style.background="radial-gradient(ellipse at 50% 50%,rgba(201,168,76,.07) 0%,transparent 70%)";
 
   }else{
@@ -218,9 +235,13 @@ function onIPhoneScroll(){
     showScreen=!(rotY%360>90&&rotY%360<270);
     showPortrait=showScreen;
     setPhase(6);
-    ipLeft.classList.add("vis"); ipRight.classList.add("vis");
     iphAmb.style.background="radial-gradient(ellipse at 50% 50%,rgba(201,168,76,.06) 0%,transparent 70%)";
   }
+
+  // Manage visibility of texts globally based on phase
+  const isPhaseWithText = lastPhase > 0;
+  ipLeft.classList.toggle("vis", isPhaseWithText);
+  ipRight.classList.toggle("vis", isPhaseWithText);
 
   // Apply phone size
   iphWrap.style.width  = pW+"px";
