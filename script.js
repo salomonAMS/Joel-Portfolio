@@ -147,18 +147,45 @@ function setPhase(ph){
     if(ph!==lastPhase) return; 
     const ctx = PHASE_TEXTS[ph];
     
+    const img1 = document.getElementById("scrImg1");
+    const img2 = document.getElementById("scrImg2");
+    const img3 = document.getElementById("scrImg3");
+    if(img1 && img2 && img3) {
+      img1.classList.toggle("vis", ph <= 3);
+      img2.classList.toggle("vis", ph === 5);
+      img3.classList.toggle("vis", ph === 6);
+    }
+    
+    const ipMobileText = document.getElementById("ipMobileText");
+
     if (!ctx || !ctx.lTitle) {
       ipLeft.innerHTML = "";
       ipRight.innerHTML = "";
       ipLeft.classList.remove("vis");
       ipRight.classList.remove("vis");
+      if(ipMobileText) {
+        ipMobileText.innerHTML = "";
+        ipMobileText.classList.remove("vis");
+      }
       return;
     }
     
     ipLeft.classList.add("vis");
     ipRight.classList.add("vis");
-    ipLeft.innerHTML = `<div class="ip-eyebrow">${ctx.lEye}</div><div class="ip-title">${ctx.lTitle}</div><p class="ip-body">${ctx.lText}</p>`;
-    ipRight.innerHTML = `<div class="ip-eyebrow">${ctx.rEye}</div><div class="ip-title">${ctx.rTitle}</div><p class="ip-body">${ctx.rText}</p>`;
+    
+    const lHTML = `<div class="ip-eyebrow">${ctx.lEye}</div><div class="ip-title">${ctx.lTitle}</div><p class="ip-body">${ctx.lText}</p>`;
+    const rHTML = `<div class="ip-eyebrow">${ctx.rEye}</div><div class="ip-title">${ctx.rTitle}</div><p class="ip-body">${ctx.rText}</p>`;
+    
+    ipLeft.innerHTML = lHTML;
+    ipRight.innerHTML = rHTML;
+    
+    if(ipMobileText) {
+      ipMobileText.classList.add("vis");
+      ipMobileText.innerHTML = lHTML + `<div style="margin-top:16px"></div>` + rHTML;
+      ipMobileText.style.animation = "none";
+      void ipMobileText.offsetWidth;
+      ipMobileText.style.animation = "textInL 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards";
+    }
     
     ipLeft.style.animation = "none";
     ipRight.style.animation = "none";
@@ -172,6 +199,8 @@ function setPhase(ph){
   if (ipLeft.innerHTML !== "") {
     ipLeft.style.animation = "textOutL 0.4s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards";
     ipRight.style.animation = "textOutR 0.4s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards";
+    const ipMT = document.getElementById("ipMobileText");
+    if(ipMT) ipMT.style.animation = "textOutL 0.4s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards";
     animTimeout = setTimeout(performEnter, 400);
   } else {
     performEnter();

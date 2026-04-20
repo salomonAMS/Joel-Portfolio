@@ -125,6 +125,9 @@
   <div class="iphone-sticky">
     <div class="iphone-ambient" id="iphoneAmbient"></div>
     <div class="ip-label" id="ipLabel">Défilez pour découvrir</div>
+    
+    <!-- MOBILE BOTTOM TEXT -->
+    <div class="ip-mobile-text" id="ipMobileText"></div>
 
     <div class="ip-side ip-side-l" id="ipLeft"></div>
     <div class="ip-side ip-side-r" id="ipRight"></div>
@@ -135,8 +138,24 @@
       <img class="iphone-img-back" id="iphoneBack" src="iphone-back.png">
       <!-- FRONT frame -->
       <img class="iphone-img-front" id="iphoneFront" src="iphone-front.png">
+      
       <!-- Screen overlay -->
-
+      <div class="iphone-screen-overlay" id="screenOverlay">
+        
+        <!-- Portrait Screen (Progressive photos) -->
+        <div class="scr-portrait" id="scrPortrait">
+          <img src="screen-img-1.jpg" class="scr-img scr-img-1" id="scrImg1" alt="Logo">
+          <img src="screen-img-2.png" class="scr-img scr-img-2" id="scrImg2" alt="UI 1">
+          <img src="screen-img-3.png" class="scr-img scr-img-3" id="scrImg3" alt="UI 2">
+        </div>
+        
+        <!-- Landscape Screen (Animated Timeline Video) -->
+        <div class="scr-landscape" id="scrLandscape">
+          <video class="landscape-vid desktop-vid" autoplay loop muted playsinline src="baybee_doll06_1776718754015.mp4"></video>
+          <video class="landscape-vid mobile-vid" autoplay loop muted playsinline src="athuleehh_1776719138720.mp4"></video>
+        </div>
+        
+      </div>
     </div>
 
     <div class="ip-dots">
