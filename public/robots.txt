@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://joel-cameroun.com/sitemap.xml
+
+# Crawl delay for bots
+Crawl-delay: 1
+
+# Google Search Console
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
