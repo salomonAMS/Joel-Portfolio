@@ -134,15 +134,47 @@ const PHASE_TEXTS = [
 ];
 
 let lastPhase=-1;
+let animTimeout=null;
 function setPhase(ph){
-  if(ph===lastPhase)return; lastPhase=ph;
+  if(ph===lastPhase)return; 
+  lastPhase=ph;
   ipLabel.textContent=LABELS[ph]||"";
   setDot(Math.min(ph,4));
   
-  const ctx = PHASE_TEXTS[ph];
-  if (ctx) {
-    ipLeft.innerHTML = ctx.lTitle ? `<div class="ip-eyebrow">${ctx.lEye}</div><div class="ip-title">${ctx.lTitle}</div><p class="ip-body">${ctx.lText}</p>` : "";
-    ipRight.innerHTML = ctx.rTitle ? `<div class="ip-eyebrow">${ctx.rEye}</div><div class="ip-title">${ctx.rTitle}</div><p class="ip-body">${ctx.rText}</p>` : "";
+  if(animTimeout) clearTimeout(animTimeout);
+
+  const performEnter = () => {
+    if(ph!==lastPhase) return; 
+    const ctx = PHASE_TEXTS[ph];
+    
+    if (!ctx || !ctx.lTitle) {
+      ipLeft.innerHTML = "";
+      ipRight.innerHTML = "";
+      ipLeft.classList.remove("vis");
+      ipRight.classList.remove("vis");
+      return;
+    }
+    
+    ipLeft.classList.add("vis");
+    ipRight.classList.add("vis");
+    ipLeft.innerHTML = `<div class="ip-eyebrow">${ctx.lEye}</div><div class="ip-title">${ctx.lTitle}</div><p class="ip-body">${ctx.lText}</p>`;
+    ipRight.innerHTML = `<div class="ip-eyebrow">${ctx.rEye}</div><div class="ip-title">${ctx.rTitle}</div><p class="ip-body">${ctx.rText}</p>`;
+    
+    ipLeft.style.animation = "none";
+    ipRight.style.animation = "none";
+    void ipLeft.offsetWidth;
+    void ipRight.offsetWidth;
+    
+    ipLeft.style.animation = "textInL 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards";
+    ipRight.style.animation = "textInR 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards";
+  };
+
+  if (ipLeft.innerHTML !== "") {
+    ipLeft.style.animation = "textOutL 0.4s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards";
+    ipRight.style.animation = "textOutR 0.4s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards";
+    animTimeout = setTimeout(performEnter, 400);
+  } else {
+    performEnter();
   }
 }
 
@@ -238,14 +270,20 @@ function onIPhoneScroll(){
     iphAmb.style.background="radial-gradient(ellipse at 50% 50%,rgba(201,168,76,.06) 0%,transparent 70%)";
   }
 
-  // Manage visibility of texts globally based on phase
-  const isPhaseWithText = lastPhase > 0;
-  ipLeft.classList.toggle("vis", isPhaseWithText);
-  ipRight.classList.toggle("vis", isPhaseWithText);
+  // Visibility is now managed entirely by setPhase
 
   // Apply phone size
   iphWrap.style.width  = pW+"px";
   iphWrap.style.height = pH+"px";
+  
+  // Add landscape specific layout for texts
+  if (showLandscape) {
+    ipLeft.classList.add("ip-landscape");
+    ipRight.classList.add("ip-landscape");
+  } else {
+    ipLeft.classList.remove("ip-landscape");
+    ipRight.classList.remove("ip-landscape");
+  }
 
   // Apply transform (fade in from 0)
   const fadeIn=eOut(rm(prog,0,0.05));
