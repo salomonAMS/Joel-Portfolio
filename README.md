@@ -6,7 +6,7 @@ Portfolio moderne et performant pour vidéaste professionnel, construit avec Nex
 
 - **Hero Section Animée** - Arrière-plan canvas animé avec effets visuels
 - **Portfolio Dynamique** - Galerie de projets avec animations au survol
-- **Formulaire de Contact** - Intégration complète avec Resend pour l'envoi d'emails
+- **Section Contact** - Affichage des coordonnées de contact (email, téléphone, réseaux sociaux)
 - **SEO Optimisé** - Meta tags, Open Graph, sitemap, robots.txt
 - **Performance** - Images optimisées, lazy loading, minification
 - **Responsive** - Design mobile-first, compatible tous les appareils
@@ -15,10 +15,9 @@ Portfolio moderne et performant pour vidéaste professionnel, construit avec Nex
 
 ## 🚀 Stack Technologique
 
-- **Framework**: Next.js 15
+- **Framework**: Next.js 16
 - **UI Library**: React 19
-- **Email**: Resend
-- **Styling**: CSS personnalisé + Tailwind CSS ready
+- **Styling**: CSS personnalisé
 - **TypeScript**: Typage complet
 - **Deployment**: Vercel (optimisé)
 
@@ -26,7 +25,6 @@ Portfolio moderne et performant pour vidéaste professionnel, construit avec Nex
 
 - Node.js 18+ (recommandé 20+)
 - npm ou pnpm
-- Clé API Resend (gratuite à https://resend.com)
 
 ## 🔧 Installation Locale
 
@@ -45,23 +43,7 @@ npm install
 pnpm install
 ```
 
-### 3. Configurer les variables d'environnement
-
-Créer un fichier `.env.local` à la racine du projet :
-
-```bash
-cp .env.local.example .env.local
-```
-
-Puis remplir avec vos valeurs:
-
-```env
-RESEND_API_KEY=your_resend_api_key
-CONTACT_EMAIL=joel@exemple.com
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
-```
-
-### 4. Lancer le serveur de développement
+### 3. Lancer le serveur de développement
 
 ```bash
 npm run dev
@@ -74,9 +56,6 @@ Ouvrir [http://localhost:3000](http://localhost:3000) dans votre navigateur.
 ```
 .
 ├── app/
-│   ├── api/
-│   │   └── contact/
-│   │       └── route.ts          # API route pour les emails
 │   ├── components/
 │   │   ├── Hero.tsx              # Section hero animée
 │   │   ├── About.tsx             # Section à propos avec stats
@@ -123,36 +102,18 @@ Modifier les variables CSS dans `app/globals.css`:
 - **Textes**: Éditer directement dans les composants
 - **Images Projets**: Remplacer les fichiers dans `public/projects/`
 - **Données Portfolio**: Modifier l'array `projects` dans `app/components/Portfolio.tsx`
-- **Contact Email**: Mettre à jour `CONTACT_EMAIL` dans `.env.local`
+- **Infos Contact**: Mettre à jour les coordonnées dans `app/components/ContactForm.tsx`
 
 ### Réseaux Sociaux
 
 Mettre à jour les URLs dans `app/components/ContactForm.tsx` et `app/components/Footer.tsx`
 
-## 📧 Configuration Email avec Resend
-
-### Créer un compte Resend
-
-1. Aller sur https://resend.com
-2. Créer un compte gratuit
-3. Vérifier votre domaine
-4. Copier votre API key
-
-### Configurer l'envoi d'emails
-
-L'API route `/api/contact` gère:
-- Validation des données côté serveur
-- Envoi de deux emails (admin + confirmation utilisateur)
-- Protection contre les abus
-- Gestion des erreurs
-
 ## 🔐 Sécurité
 
-- ✅ Validation des formulaires côté serveur
-- ✅ Sanitization du contenu HTML
 - ✅ Headers de sécurité configurés
-- ✅ CORS configuré correctement
-- ✅ Protection contre les injections XSS
+- ✅ Aucune données sensibles exposées
+- ✅ TypeScript strict mode pour la sécurité des types
+- ✅ Contenu statique sans backend
 
 ## 📱 Optimisations Performance
 
@@ -187,10 +148,7 @@ git push origin main
 
 1. Aller sur https://vercel.com/new
 2. Importer le projet GitHub
-3. Configurer les variables d'environnement:
-   - `RESEND_API_KEY`
-   - `CONTACT_EMAIL`
-   - `NEXT_PUBLIC_SITE_URL=https://votre-domaine.com`
+3. Aucune configuration requise (déploiement immédiat)
 4. Cliquer "Deploy"
 
 ### 3. Configurer votre domaine
@@ -231,8 +189,7 @@ Pour toute question ou problème:
 
 - Next.js pour l'excellent framework
 - Vercel pour l'hébergement performant
-- Resend pour la solution email simple et fiable
 
 ---
 
-**Version**: 1.0.0 - Production Ready
+**Version**: 1.1.0 - Production Ready (Static Version)
