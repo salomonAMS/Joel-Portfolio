@@ -338,10 +338,120 @@ function onIPhoneScroll(){
 window.addEventListener("scroll",onIPhoneScroll,{passive:true});
 onIPhoneScroll();
 
-// ── FORM ──
+// ── PROJECTS MODAL LOGIC ──
+const videoModal = document.getElementById("videoModal");
+const modalVideo = document.getElementById("modalVideo");
+const modalPlayBtn = document.getElementById("modalPlayBtn");
+const modalTitle = document.getElementById("modalTitle");
+const modalCat = document.getElementById("modalCat");
+const modalProgressBar = document.getElementById("modalProgressBar");
+const modalProgressWrap = document.getElementById("modalProgressWrap");
+
+let currentProjIndex = 0;
+const projCards = Array.from(document.querySelectorAll(".proj-card"));
+const projectsData = projCards.map(card => ({
+  src: card.querySelector("video").src,
+  title: card.querySelector(".proj-title").textContent,
+  cat: card.querySelector(".proj-cat").textContent
+}));
+
+projCards.forEach((card, index) => {
+  card.addEventListener("click", () => openModal(index));
+});
+
+function openModal(index) {
+  currentProjIndex = index;
+  updateModalContent();
+  videoModal.classList.add("open");
+  modalVideo.play().catch(() => {});
+  updatePlayBtnText();
+  document.body.style.overflow = "hidden"; // Lock scroll
+}
+
+function updateModalContent() {
+  const data = projectsData[currentProjIndex];
+  modalVideo.src = data.src;
+  modalTitle.textContent = data.title;
+  modalCat.textContent = data.cat;
+}
+
+function closeModal() {
+  videoModal.classList.remove("open");
+  modalVideo.pause();
+  document.body.style.overflow = ""; // Unlock scroll
+}
+
+function nextModalVideo() {
+  currentProjIndex = (currentProjIndex + 1) % projectsData.length;
+  updateModalContent();
+  modalVideo.play().catch(() => {});
+  updatePlayBtnText();
+}
+
+function toggleModalPlay() {
+  if (modalVideo.paused) modalVideo.play();
+  else modalVideo.pause();
+  updatePlayBtnText();
+}
+
+function updatePlayBtnText() {
+  if(modalPlayBtn) modalPlayBtn.textContent = modalVideo.paused ? "LIRE" : "PAUSE";
+}
+
+// ── PROGRESS BAR UPDATES ──
+modalVideo.addEventListener("timeupdate", () => {
+  const pct = (modalVideo.currentTime / modalVideo.duration) * 100;
+  if(modalProgressBar) modalProgressBar.style.width = pct + "%";
+});
+
+// Click to seek
+if(modalProgressWrap) {
+  modalProgressWrap.addEventListener("click", (e) => {
+    const rect = modalProgressWrap.getBoundingClientRect();
+    const pos = (e.clientX - rect.left) / rect.width;
+    modalVideo.currentTime = pos * modalVideo.duration;
+  });
+}
+
+// Ensure UI updates reliably
+modalVideo.onplay = updatePlayBtnText;
+modalVideo.onpause = updatePlayBtnText;
+modalVideo.onended = nextModalVideo;
+
+// ── FORM WITH WHATSAPP REDIRECTION ──
 function handleSubmit(e){
   e.preventDefault();
-  const btn=e.target.querySelector(".btn-submit"),orig=btn.textContent;
-  btn.textContent="Message envoyé ✓";btn.style.background="#2ecc71";
-  setTimeout(()=>{btn.textContent=orig;btn.style.background="";e.target.reset()},3000);
+  
+  // 1. Get form values
+  const name    = document.getElementById("contactName").value;
+  const email   = document.getElementById("contactEmail").value;
+  const type    = document.getElementById("contactType").value;
+  const message = document.getElementById("contactMessage").value;
+  
+  // 2. Format the message for WhatsApp
+  // Replace with the Togolese number (+228)
+  const phoneNumber = "22891942854"; 
+  
+  let fullMessage = `*Nouveau message Portfolio JOCAM*\n\n`;
+  fullMessage += `*Nom:* ${name}\n`;
+  fullMessage += `*Email:* ${email}\n`;
+  fullMessage += `*Projet:* ${type || "Non spécifié"}\n\n`;
+  fullMessage += `*Message:* ${message}`;
+  
+  const encodedMessage = encodeURIComponent(fullMessage);
+  const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+  
+  // 3. UI Feedback
+  const btn = e.target.querySelector(".btn-submit");
+  const orig = btn.textContent;
+  btn.textContent = "Redirection WhatsApp...";
+  btn.style.background = "#25D366"; // WhatsApp Green
+  
+  // 4. Redirect after a short delay
+  setTimeout(() => {
+    window.open(whatsappURL, '_blank');
+    btn.textContent = orig;
+    btn.style.background = "";
+    e.target.reset();
+  }, 1000);
 }
